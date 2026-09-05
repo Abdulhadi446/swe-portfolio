@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: "John Doe | Software Engineer",
   description:
     "Portfolio of John Doe - Software Engineer specializing in full-stack web development.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
