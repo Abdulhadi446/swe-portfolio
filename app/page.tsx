@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import FadeIn from "@/components/animations/FadeIn";
 import TextReveal from "@/components/animations/TextReveal";
@@ -118,21 +119,7 @@ export default function Home() {
                 <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mb-4">
                   Technologies I work with
                 </h3>
-                <div className="flex flex-wrap gap-2">
-                  {skills.map((skill, i) => (
-                    <span
-                      key={skill}
-                      className="px-3 py-1.5 text-sm font-mono text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-400/10 border border-blue-200 dark:border-blue-400/20 rounded-md"
-                      style={{
-                        opacity: 0,
-                        transform: "translateY(10px)",
-                        animation: `fadeInUp 0.4s ease ${0.3 + i * 0.05}s forwards`,
-                      }}
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
+                <StaggerSkills skills={skills} />
               </div>
             </FadeIn>
           </div>
@@ -219,5 +206,52 @@ function ContactForm() {
         Open Email Client
       </button>
     </form>
+  );
+}
+
+function StaggerSkills({ skills }: { skills: string[] }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const children = Array.from(el.children) as HTMLElement[];
+    children.forEach((child) => {
+      child.style.opacity = "0";
+      child.style.transform = "translateY(10px)";
+    });
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          children.forEach((child, i) => {
+            setTimeout(() => {
+              child.style.opacity = "1";
+              child.style.transform = "translateY(0)";
+            }, 300 + i * 50);
+          });
+          observer.unobserve(el);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className="flex flex-wrap gap-2">
+      {skills.map((skill) => (
+        <span
+          key={skill}
+          className="px-3 py-1.5 text-sm font-mono text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-400/10 border border-blue-200 dark:border-blue-400/20 rounded-md"
+          style={{ transition: "opacity 0.4s ease, transform 0.4s ease" }}
+        >
+          {skill}
+        </span>
+      ))}
+    </div>
   );
 }

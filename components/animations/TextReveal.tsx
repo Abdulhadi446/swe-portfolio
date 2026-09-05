@@ -10,10 +10,14 @@ export default function TextReveal({ text, className = "" }: { text: string; cla
     const el = ref.current;
     if (!el) return;
 
+    const spans = el.querySelectorAll("span > span");
+    spans.forEach((span) => {
+      (span as HTMLElement).style.transform = "translateY(100%)";
+    });
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          const spans = el.querySelectorAll("span > span");
           spans.forEach((span, i) => {
             setTimeout(() => {
               (span as HTMLElement).style.transform = "translateY(0)";
@@ -36,7 +40,6 @@ export default function TextReveal({ text, className = "" }: { text: string; cla
           <span
             className="inline-block"
             style={{
-              transform: "translateY(100%)",
               transition: "transform 0.4s ease",
             }}
           >

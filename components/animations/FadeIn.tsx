@@ -16,6 +16,9 @@ export default function FadeIn({ children, delay = 0, direction = "up", classNam
     const el = ref.current;
     if (!el) return;
 
+    el.style.opacity = "0";
+    el.style.transform = transforms[direction];
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -29,7 +32,7 @@ export default function FadeIn({ children, delay = 0, direction = "up", classNam
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [direction]);
 
   const transforms: Record<string, string> = {
     up: "translateY(40px)",
@@ -43,8 +46,6 @@ export default function FadeIn({ children, delay = 0, direction = "up", classNam
       ref={ref}
       className={className}
       style={{
-        opacity: 0,
-        transform: transforms[direction],
         transition: `opacity 0.6s ease ${delay}s, transform 0.6s ease ${delay}s`,
       }}
     >

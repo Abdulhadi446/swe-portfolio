@@ -8,11 +8,6 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   return (
     <div
       className="group relative bg-zinc-900 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 hover:shadow-2xl hover:shadow-blue-500/5 transition-all duration-300"
-      style={{
-        opacity: 0,
-        transform: "scale(0.95)",
-        animation: `fadeInUp 0.4s ease ${index * 0.1}s forwards`,
-      }}
     >
       {project.featured && (
         <div className="absolute -top-3 right-4 px-2 py-0.5 text-xs font-medium bg-blue-600 text-white rounded-full">

@@ -2,22 +2,27 @@
 
 import { useEffect, useRef, ReactNode } from "react";
 
-export function StaggerChildren({ children, className = "", staggerDelay = 0.1 }: { children: ReactNode; className?: string; staggerDelay?: number }) {
+export function StaggerChildren({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return <div className={className}>{children}</div>;
+}
+
+export function StaggerItem({ children, className = "", index = 0 }: { children: ReactNode; className?: string; index?: number }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
+    el.style.opacity = "0";
+    el.style.transform = "translateY(20px)";
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          const children = el.children;
-          Array.from(children).forEach((child, i) => {
-            const childEl = child as HTMLElement;
-            childEl.style.opacity = "1";
-            childEl.style.transform = "translateY(0)";
-          });
+          setTimeout(() => {
+            el.style.opacity = "1";
+            el.style.transform = "translateY(0)";
+          }, index * 100);
           observer.unobserve(el);
         }
       },
@@ -26,23 +31,14 @@ export function StaggerChildren({ children, className = "", staggerDelay = 0.1 }
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [index]);
 
-  return (
-    <div ref={ref} className={className}>
-      {children}
-    </div>
-  );
-}
-
-export function StaggerItem({ children, className = "", index = 0 }: { children: ReactNode; className?: string; index?: number }) {
   return (
     <div
+      ref={ref}
       className={className}
       style={{
-        opacity: 0,
-        transform: "translateY(20px)",
-        transition: `opacity 0.4s ease ${index * 0.1}s, transform 0.4s ease ${index * 0.1}s`,
+        transition: "opacity 0.4s ease, transform 0.4s ease",
       }}
     >
       {children}
