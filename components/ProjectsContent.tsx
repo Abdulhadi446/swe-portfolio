@@ -1,19 +1,18 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { projects, categories, type Project } from "@/lib/projects";
 import FadeIn from "@/components/animations/FadeIn";
 
-function ProjectCard({ project }: { project: Project }) {
+function ProjectCard({ project, index }: { project: Project; index: number }) {
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ duration: 0.3 }}
+    <div
       className="group relative bg-zinc-900 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 hover:shadow-2xl hover:shadow-blue-500/5 transition-all duration-300"
+      style={{
+        opacity: 0,
+        transform: "scale(0.95)",
+        animation: `fadeInUp 0.4s ease ${index * 0.1}s forwards`,
+      }}
     >
       {project.featured && (
         <div className="absolute -top-3 right-4 px-2 py-0.5 text-xs font-medium bg-blue-600 text-white rounded-full">
@@ -53,7 +52,7 @@ function ProjectCard({ project }: { project: Project }) {
           </a>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -84,13 +83,11 @@ export default function ProjectsContent() {
         </div>
       </FadeIn>
 
-      <motion.div layout className="grid md:grid-cols-2 gap-6">
-        <AnimatePresence mode="popLayout">
-          {filtered.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </AnimatePresence>
-      </motion.div>
+      <div key={activeCategory} className="grid md:grid-cols-2 gap-6">
+        {filtered.map((project, i) => (
+          <ProjectCard key={project.id} project={project} index={i} />
+        ))}
+      </div>
     </>
   );
 }

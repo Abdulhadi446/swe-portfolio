@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
 import ThemeToggle from "./ui/ThemeToggle";
 
 const links = [
@@ -16,12 +15,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ type: "spring", stiffness: 100, damping: 20 }}
-      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-zinc-950/80 border-b border-zinc-200 dark:border-zinc-800"
-    >
+    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-zinc-950/80 border-b border-zinc-200 dark:border-zinc-800 animate-[slideDown_0.5s_ease]">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="font-bold text-xl text-zinc-900 dark:text-white">
           <span className="text-blue-600 dark:text-blue-400">&lt;</span>
@@ -39,11 +33,7 @@ export default function Navbar() {
                 className="relative px-4 py-2 text-sm font-medium transition-colors rounded-lg"
               >
                 {isActive && (
-                  <motion.div
-                    layoutId="activeTab"
-                    className="absolute inset-0 bg-zinc-100 dark:bg-zinc-800 rounded-lg"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
+                  <div className="absolute inset-0 bg-zinc-100 dark:bg-zinc-800 rounded-lg transition-all duration-300" />
                 )}
                 <span className={`relative z-10 ${isActive ? "text-zinc-900 dark:text-white" : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"}`}>
                   {link.label}
@@ -67,6 +57,6 @@ export default function Navbar() {
           </a>
         </div>
       </div>
-    </motion.nav>
+    </nav>
   );
 }

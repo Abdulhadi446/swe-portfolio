@@ -1,16 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { getAllPosts, type BlogPost } from "@/lib/blog";
+import { type BlogPost } from "@/lib/blog";
 import FadeIn from "@/components/animations/FadeIn";
 
-function BlogCard({ post }: { post: BlogPost }) {
+function BlogCard({ post, index }: { post: BlogPost; index: number }) {
   return (
-    <FadeIn>
-      <Link href={`/blog/${post.slug}`}>
-        <motion.article
-          whileHover={{ y: -4 }}
+    <FadeIn delay={index * 0.1}>
+      <Link href={`/blog/${post.slug}/`}>
+        <article
           className="group block bg-zinc-900 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all duration-300"
         >
           <div className="flex items-center gap-3 text-xs text-zinc-500 mb-3 font-mono">
@@ -35,7 +33,7 @@ function BlogCard({ post }: { post: BlogPost }) {
             Read more
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
           </div>
-        </motion.article>
+        </article>
       </Link>
     </FadeIn>
   );
@@ -52,8 +50,8 @@ export default function BlogContent({ posts }: { posts: BlogPost[] }) {
 
   return (
     <div className="space-y-6">
-      {posts.map((post) => (
-        <BlogCard key={post.slug} post={post} />
+      {posts.map((post, i) => (
+        <BlogCard key={post.slug} post={post} index={i} />
       ))}
     </div>
   );

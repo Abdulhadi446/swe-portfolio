@@ -1,40 +1,51 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ReactNode } from "react";
+import { useEffect, useRef, ReactNode } from "react";
 
-interface StaggerChildrenProps {
-  children: ReactNode;
-  className?: string;
-  staggerDelay?: number;
-}
+export function StaggerChildren({ children, className = "", staggerDelay = 0.1 }: { children: ReactNode; className?: string; staggerDelay?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
 
-export function StaggerChildren({ children, className = "", staggerDelay = 0.1 }: StaggerChildrenProps) {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          const children = el.children;
+          Array.from(children).forEach((child, i) => {
+            const childEl = child as HTMLElement;
+            childEl.style.opacity = "1";
+            childEl.style.transform = "translateY(0)";
+          });
+          observer.unobserve(el);
+        }
+      },
+      { threshold: 0.1, rootMargin: "-50px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <motion.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-50px" }}
-      variants={{
-        visible: { transition: { staggerChildren: staggerDelay } },
-      }}
-      className={className}
-    >
+    <div ref={ref} className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 }
 
-export function StaggerItem({ children, className = "" }: { children: ReactNode; className?: string }) {
+export function StaggerItem({ children, className = "", index = 0 }: { children: ReactNode; className?: string; index?: number }) {
   return (
-    <motion.div
-      variants={{
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
-      }}
+    <div
       className={className}
+      style={{
+        opacity: 0,
+        transform: "translateY(20px)",
+        transition: `opacity 0.4s ease ${index * 0.1}s, transform 0.4s ease ${index * 0.1}s`,
+      }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

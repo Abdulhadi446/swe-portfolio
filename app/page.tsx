@@ -1,10 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
 import FadeIn from "@/components/animations/FadeIn";
 import TextReveal from "@/components/animations/TextReveal";
-import { StaggerChildren, StaggerItem } from "@/components/animations/StaggerChildren";
 
 const skills = [
   "JavaScript", "TypeScript", "React", "Next.js", "Node.js",
@@ -120,15 +118,21 @@ export default function Home() {
                 <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mb-4">
                   Technologies I work with
                 </h3>
-                <StaggerChildren className="flex flex-wrap gap-2" staggerDelay={0.05}>
-                  {skills.map((skill) => (
-                    <StaggerItem key={skill}>
-                      <span className="px-3 py-1.5 text-sm font-mono text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-400/10 border border-blue-200 dark:border-blue-400/20 rounded-md">
-                        {skill}
-                      </span>
-                    </StaggerItem>
+                <div className="flex flex-wrap gap-2">
+                  {skills.map((skill, i) => (
+                    <span
+                      key={skill}
+                      className="px-3 py-1.5 text-sm font-mono text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-400/10 border border-blue-200 dark:border-blue-400/20 rounded-md"
+                      style={{
+                        opacity: 0,
+                        transform: "translateY(10px)",
+                        animation: `fadeInUp 0.4s ease ${0.3 + i * 0.05}s forwards`,
+                      }}
+                    >
+                      {skill}
+                    </span>
                   ))}
-                </StaggerChildren>
+                </div>
               </div>
             </FadeIn>
           </div>
@@ -141,9 +145,9 @@ export default function Home() {
           <FadeIn>
             <h2 className="text-3xl font-bold text-zinc-900 dark:text-white mb-12 text-center">Experience</h2>
           </FadeIn>
-          <StaggerChildren className="space-y-8" staggerDelay={0.15}>
+          <div className="space-y-8">
             {experiences.map((exp, index) => (
-              <StaggerItem key={index}>
+              <FadeIn key={index} delay={index * 0.15}>
                 <div className="relative pl-8 border-l-2 border-zinc-200 dark:border-zinc-800 hover:border-blue-500 transition-colors">
                   <div className="absolute left-[-9px] top-0 w-4 h-4 bg-blue-600 rounded-full border-4 border-white dark:border-zinc-950" />
                   <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-6 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors shadow-sm dark:shadow-none">
@@ -162,9 +166,9 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-              </StaggerItem>
+              </FadeIn>
             ))}
-          </StaggerChildren>
+          </div>
         </div>
       </section>
 
